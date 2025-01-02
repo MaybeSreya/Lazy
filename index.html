@@ -1,0 +1,122 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <script src="https://registry.npmmirror.com/vue/3.3.11/files/dist/vue.global.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap');
+    body {
+      font-family: 'Signika', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-white flex justify-center items-center min-h-screen">
+  <div id="app" class="w-full max-w-md p-4">
+    <div class="mb-6">
+      <p class="text-gray-500">Amount to be paid</p>
+      <p class="text-3xl font-bold">
+        {{ amount }}
+        <span class="text-gray-500">USDT</span>
+      </p>
+    </div>
+    <div class="mb-6">
+      <p class="text-lg font-semibold mb-4">Select a cryptocurrency</p>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="Bitcoin logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/jRptNHa4vTpIOJcvKeerPNTlfFTY0kqDDst7rE3f2NGkpVEQB.jpg"/>
+            <div>
+              <p class="font-semibold">Bitcoin (BTC)</p>
+              <p class="text-sm text-gray-500">Lightning Network</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="Ethereum logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/EAowONTW1PJ1GBAdxxYvT3e8TjckORc7UpwCLTOW0u0NtiAKA.jpg"/>
+            <p class="font-semibold">Ethereum (ETH)</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="Tether logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/UdiyTJx3ho6DNddkJ4vmmAlH2vkRXoxfbeHczBfOKt4l0KCoA.jpg"/>
+            <p class="font-semibold">Tether (USDT)</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="USD Coin logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/Szu3sKQrUj76L9efJn8YtjFAwBmASR2InvKYEoVfMgBh0KCoA.jpg"/>
+            <p class="font-semibold">USD Coin (USDC)</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="PayPal USD logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/56QGfy67XyTsdyrvjm6c842LbiP70KuuK965aGDGcz6LtiAKA.jpg"/>
+            <p class="font-semibold">PayPal USD (PYUSD)</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="text-lg font-semibold mb-4">Or pay with:</p>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="Exchange logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/gpiKNy97B5KTExPUsbpUBXyPKbfsVkYfmfWrvQjifK0WpVEQB.jpg"/>
+            <p class="font-semibold">Exchange</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+        <div class="flex items-center justify-between p-4 border rounded-lg cursor-pointer" @click="processPayment">
+          <div class="flex items-center space-x-3">
+            <img alt="Coinbase logo" class="w-6 h-6" src="https://storage.googleapis.com/a1aa/image/BPjBf9kvSnweY08lU7Zg7nHnXwIVYcpvIjzeWGIsw5bp0KCoA.jpg"/>
+            <p class="font-semibold">Coinbase</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-500"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup() {
+        const amount = ref(0);
+
+        const getQueryParam = (param) => {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(param);
+        };
+
+        const processPayment = () => {
+          const randomNumber = Math.floor(Math.random() * 1000000);
+          const newUrl = `${window.location.origin}${window.location.pathname}?TxId=hash_${randomNumber}`;
+          window.history.pushState({ path: newUrl }, '', newUrl);
+        };
+
+        const init = () => {
+          const amountParam = getQueryParam('am');
+          if (amountParam) {
+            amount.value = amountParam;
+          }
+        };
+
+        init();
+
+        return {
+          amount,
+          processPayment
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
